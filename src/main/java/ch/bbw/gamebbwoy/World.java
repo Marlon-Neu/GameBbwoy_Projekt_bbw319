@@ -58,6 +58,19 @@ public class World {
                 physicsObjects.get(i).interact(physicsObjects.get(j));
             }
         }
+        List<ForcesUp> toRemove = new ArrayList<>();
+        for (int j=1;j<collisionObjects.size();j++){
+           if(collisionObjects.get(j) instanceof ForcesUp){
+               if(collisionObjects.get(0).collides(collisionObjects.get(j))){
+                   toRemove.add((ForcesUp) collisionObjects.get(j));
+               }
+           }
+        }
+        for(ForcesUp object : toRemove){
+            collisionObjects.remove(object);
+            physicsObjects.remove(object);
+            gameObjects.remove(object);
+        }
         Iterator<GameObject> iterator= gameObjects.iterator();
         while(iterator.hasNext()){
             GameObject object= iterator.next();

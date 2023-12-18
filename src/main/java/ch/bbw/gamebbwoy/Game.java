@@ -14,10 +14,8 @@ public class Game implements PixelDrawing, ButtonListener {
 
     Background bg;
     NumberDisplay scoreDisplay;
-    NumberDisplay xsDisplay;
-    NumberDisplay ysDisplay;
-
-
+    NumberDisplay forcesDisplay;
+    ForcesIcon forcesIcon;
     Bounds drawingBoundary;
     Bounds gameBoundary;
 
@@ -26,21 +24,19 @@ public class Game implements PixelDrawing, ButtonListener {
     Point playerPoint;
     PlayerSquare player;
     PlayerHeightTracker heightTracker;
-    Square testSquare;
 
     @Override
     public void initialize(PixelDisplay graphic) {
         PixelDrawing.super.initialize(graphic);
         scoreDisplay = new NumberDisplay(new Point(graphic.getPixelWidth()-8,
                 graphic.getPixelHeight()-15),123,4);
-        xsDisplay = new NumberDisplay(new Point(graphic.getPixelWidth()-8,
-                graphic.getPixelHeight()-30),123,4);
-        ysDisplay = new NumberDisplay(new Point(graphic.getPixelWidth()-8,
-                graphic.getPixelHeight()-45),123,4);
+        forcesDisplay = new NumberDisplay(new Point(20,
+                5),123,1);
+        forcesIcon = new ForcesIcon(new Point(3,4));
         drawingBoundary =  new Bounds(graphic.getPixelHeight(), graphic.getPixelWidth()-(scoreDisplay.getWidth()+8),0,scoreDisplay.getWidth()+8);
         gameBoundary = new Bounds(graphic.getPixelHeight()*2,
                 graphic.getPixelWidth()*2,
-                -graphic.getPixelWidth()*9,
+                -graphic.getPixelHeight()*10,
                 -graphic.getPixelWidth()*2);
         bg = new Background(drawingBoundary.left(), drawingBoundary.right());
         playerPoint = new Point(graphic.getPixelWidth()/2.0, graphic.getPixelHeight()*2.0/3);
@@ -50,13 +46,7 @@ public class Game implements PixelDrawing, ButtonListener {
         world.add(heightTracker);
         StaticGameSquare initialSquare = new StaticGameSquare(new Point(graphic.getPixelWidth()/2.0, playerPoint.y-30),
                 1,4,2);
-        MovingGameSquare movingSquare = new MovingGameSquare(new Point(graphic.getPixelWidth()/2.0, playerPoint.y-50),new Point(graphic.getPixelWidth()/2.0+20, playerPoint.y-60),3,0,4,1);
-        movingSquare.setBounds(drawingBoundary);
         world.add(initialSquare);
-        world.add(movingSquare);
-        GravityPoint test = new GravityPoint(playerPoint.x,30);
-        testSquare = new Square(test,0,3);
-        //world.add(test);
     }
 
     public static void main(String[] args) throws Throwable{
@@ -73,25 +63,20 @@ public class Game implements PixelDrawing, ButtonListener {
             world.add(generateBGStars());
         }
         world.update();
-        //testSquare.tick(graphic);
         scoreDisplay.setNum((int)(heightTracker.getPlayerHeight()/10));
         scoreDisplay.tick(graphic);
-        xsDisplay.setNum((int) Math.abs(player.getCenterOfGravity().getXSpeed()));
-        ysDisplay.setNum((int) Math.abs(player.getCenterOfGravity().getYSpeed()));
-        xsDisplay.tick(graphic);
-        ysDisplay.tick(graphic);
+        forcesDisplay.setNum(player.getNumberOfForces());
+        forcesDisplay.tick(graphic);
+        forcesIcon.tick(graphic);
     }
 
     public GameObject generate(){
         IntStream stream = new Random().ints(10,-15,16);
-        switch (new Random().nextInt(4)){
-            case 0:
-                return generateSGS(stream.limit(4).boxed().toList());
-            case 1:
-                return generateMGS(stream.limit(7).boxed().toList());
-            case 2:
-        }
-        return generateSGS(stream.limit(4).boxed().toList());
+        return switch (new Random().nextInt(3)) {
+            case 1 -> generateMGS(stream.limit(7).boxed().toList());
+            case 2 -> generateFUS(stream.limit(4).boxed().toList());
+            default -> generateSGS(stream.limit(4).boxed().toList());
+        };
     }
 
     public BackgroundStars generateBGStars(){
@@ -106,7 +91,7 @@ public class Game implements PixelDrawing, ButtonListener {
     private StaticGameSquare generateSGS(List<Integer> randomNums){
         Point point = new Point(playerPoint.x, playerPoint.y);
         point.x += randomNums.get(0)*2;
-        point.y -= (world.getObjectNum()-2)*60 - randomNums.get(1)/3d;
+        point.y -= (world.getObjectNum()-2)*85 - randomNums.get(1)/4d;
         return new StaticGameSquare(point,0,
                 Math.abs(randomNums.get(2)/5)+3,
                 (randomNums.get(3)+2)/3);
@@ -115,7 +100,7 @@ public class Game implements PixelDrawing, ButtonListener {
     private MovingGameSquare generateMGS(List<Integer> randomNums){
         Point point = new Point(playerPoint.x, playerPoint.y);
         point.x += randomNums.get(0)*2;
-        point.y -= (world.getObjectNum()-2)*75 - randomNums.get(1)/3d;
+        point.y -= (world.getObjectNum()-2)*85 - randomNums.get(1)/4d;
         Point linePoint = new Point(point.x, point.y);
         linePoint.x += randomNums.get(2)*2;
         linePoint.y -= world.getObjectNum() - randomNums.get(3)*2;
@@ -125,6 +110,15 @@ public class Game implements PixelDrawing, ButtonListener {
                 randomNums.get(6)/3);
         mgs.setBounds(drawingBoundary);
         return mgs;
+    }
+
+    private ForcesUp generateFUS(List<Integer> randomNums){
+        Point point = new Point(playerPoint.x, playerPoint.y);
+        point.x += randomNums.get(0)*2;
+        point.y -= (world.getObjectNum()-2)*75 - randomNums.get(1)/4d;
+        return new ForcesUp(point,0,
+                Math.abs(randomNums.get(2)/5)+1,
+                (randomNums.get(3)+2)/3);
     }
 
     @Override

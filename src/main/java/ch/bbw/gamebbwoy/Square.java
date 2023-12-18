@@ -21,7 +21,8 @@ public class Square implements PixelDrawing{
         updatePoints();
     }
     public void setPosition(Point position) {
-        this.position = position;
+        this.position.x = position.x;
+        this.position.y = position.y;
         updatePoints();
     }
     public void setAngleInRadians(double angleInRadians) {

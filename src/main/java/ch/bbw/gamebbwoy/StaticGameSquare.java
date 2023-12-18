@@ -1,5 +1,6 @@
 package ch.bbw.gamebbwoy;
 
+import ch.bbw.gamebbwoy.api.PixelColor;
 import ch.bbw.gamebbwoy.api.PixelDisplay;
 import ch.bbw.gamebbwoy.utils.DeltaTime;
 import ch.bbw.gamebbwoy.utils.Limit;
@@ -43,7 +44,7 @@ public class StaticGameSquare extends CollidingSquare implements PhysicsObject,G
 
     @Override
     public void update() {
-        angleInRadians += turnSpeed*referenceTime*deltaTime*64;
+        angleInRadians += turnSpeed*referenceTime*deltaTime*32;
         if(angleInRadians<0){
             angleInRadians += 2*Math.PI;
         }
@@ -63,6 +64,9 @@ public class StaticGameSquare extends CollidingSquare implements PhysicsObject,G
         position.y = centerOfGravity.y;
     }
 
+    public GravityPoint getCenterOfGravity() {
+        return centerOfGravity;
+    }
 
     @Override
     public double getTimePerDeltaTime() {
@@ -77,6 +81,10 @@ public class StaticGameSquare extends CollidingSquare implements PhysicsObject,G
 
     public void setReferenceTime(double timePerDeltaTime) {
         this.referenceTime = this.timePerDeltaTime/Limit.minDouble(timePerDeltaTime, DeltaTime.minTpDT());
+    }
+
+    public void setStaticIndicatorColor(PixelColor color){
+        staticIndicator.setColor(color);
     }
 
     @Override

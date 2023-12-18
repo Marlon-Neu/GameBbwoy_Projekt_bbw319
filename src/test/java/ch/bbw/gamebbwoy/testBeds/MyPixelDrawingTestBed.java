@@ -21,6 +21,7 @@ public class MyPixelDrawingTestBed implements PixelDrawing {
 	Square square2 = new Square(cSquare2.getPoints()[3],0,5);
 	Point numPoint = new Point(149,130);
 	NumberDisplay numberDisplay = new NumberDisplay(numPoint, 0,4);
+	ForcesIcon forcesIcon = new ForcesIcon(new Point(20,5));
 	BoxFill boxFill = new BoxFill(5,5,5,5,new Point(80,40),PixelColor.LOW);
 
 	static final double radDelta = (Math.PI)/100;
@@ -59,6 +60,7 @@ public class MyPixelDrawingTestBed implements PixelDrawing {
 		connect.tick(graphic);
 		numberDisplay.tick(graphic);
 		numberDisplay.setNum((int) (rad*1000));
+		forcesIcon.tick(graphic);
 		square1.tick(graphic);
 		square1.setAngleInRadians(-rad);
 		square2.tick(graphic);

@@ -55,6 +55,11 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
     public double getTurnSpeed() {
         return turnSpeed;
     }
+
+    public int getNumberOfForces() {
+        return numberOfForces;
+    }
+
     public GravityPoint getCenterOfGravity() {
         return centerOfGravity;
     }
@@ -65,7 +70,7 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
             double distance = connector.getDistance();
             double unitX = connector.getDeltaX() / distance;
             double unitY = connector.getDeltaY() / distance;
-            double newXSpeed = centerOfGravity.getXSpeed() + unitX*(pullSpeed-pushSpeed)*DeltaTime.dT()*3;
+            double newXSpeed = centerOfGravity.getXSpeed() + unitX*(pushSpeed-pullSpeed)*DeltaTime.dT()*3;
             double newYSpeed = centerOfGravity.getYSpeed() + unitY*(pushSpeed-pullSpeed)*DeltaTime.dT()*3;
             centerOfGravity.setXSpeed(newXSpeed);
             centerOfGravity.setYSpeed(newYSpeed);
@@ -73,12 +78,12 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
             pullSpeed -= pullSpeed*DeltaTime.dT()*2;
             if(pushSpeed < 0.5){
                 pushSpeed = 0;
-
             }
             if(pullSpeed < 0.5){
                 pullSpeed = 0;
             }
         }
+
 
         turnSpeed = Limit.maxDouble(turnSpeed+clockwiseAccel+counterclockwiseAccel,maxTurnSpeed);
         turnSpeed = Limit.minDouble(turnSpeed,minTurnSpeed);
@@ -107,17 +112,24 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
     }
     private void pull(boolean isDown){
         if(isDown&&numberOfForces>0&&pullSpeed<0.2){
-            pullSpeed = 12;
+            pullSpeed = 16;
             numberOfForces--;
         }
     }
 
     private void push(boolean isDown){
         if(isDown&&numberOfForces>0&&pushSpeed<0.2){
-            pushSpeed = 12;
+            pushSpeed = 16;
             numberOfForces--;
         }
     }
+
+    private void addForces(){
+        if(numberOfForces<maxNumberOfForces){
+            numberOfForces++;
+        }
+    }
+
     public void update(PlayerSquare playerSquare){
     }
 
@@ -150,7 +162,16 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
         centerOfGravity.setSignPositive(signPositive());
         double gravityStrength = Math.abs(
                 centerOfGravity.gravitate(obj));
-        centerOfGravity.setXSpeed(centerOfGravity.getXSpeed()*.995);
+        double centeringX = 0.99995;
+        double centeringY = 0.99995;
+        if(Math.abs(centerOfGravity.getYSpeed())>3) {
+            centeringX = 0.995;
+        }
+        centerOfGravity.setXSpeed(centerOfGravity.getXSpeed()*centeringX);
+        if(Math.abs(centerOfGravity.getYSpeed())>12){
+            centeringY = 0.99;
+        }
+        centerOfGravity.setYSpeed(centerOfGravity.getYSpeed()*centeringY);
         if(gravityStrength> strongestGravityStrength){
             strongestGravityStrength = gravityStrength;
             connector.setPoint1(obj.getPosition());
@@ -160,5 +181,16 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
     @Override
     public void react(PhysicsObject obj) {
         centerOfGravity.gravitate(obj);
+    }
+
+    @Override
+    public boolean collides(CollisionObject c) {
+        boolean collides = super.collides(c);
+        if(c instanceof ForcesUp){
+            if(collides){
+                addForces();
+            }
+        }
+        return collides;
     }
 }
