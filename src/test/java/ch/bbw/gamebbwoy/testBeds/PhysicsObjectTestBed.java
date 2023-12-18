@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PhysicsObjectTestBed implements PixelDrawing {
 
-    List<GravityPoint> points = TestCase.twoPointSameDeltaTest();
+    List<GravityPoint> points = TestCase.threePointsDifferentDeltaTest();
 
     Box box0 = new Box(2,2,2,2,points.get(0));
     Box box1 = new Box(2,2,2,2,points.get(1));
@@ -36,14 +36,14 @@ public class PhysicsObjectTestBed implements PixelDrawing {
             points.get(1).interact(points.get(2));
             points.get(2).update();
         }
-        testSquare.interact(points.get(0));
-        testSquare.interact(points.get(1));
+        //testSquare.interact(points.get(0));
+        //testSquare.interact(points.get(1));
         points.get(0).update();
         points.get(1).update();
-        testSquare.update();
+        //testSquare.update();
         box0.tick(graphic);
         box1.tick(graphic);
         box2.tick(graphic);
-        testSquare.tick(graphic);
+        //testSquare.tick(graphic);
     }
 }

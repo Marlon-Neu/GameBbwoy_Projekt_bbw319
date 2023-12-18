@@ -32,16 +32,8 @@ public class Logo implements PixelDrawing {
 
     @Override
     public void tick(PixelDisplay graphic) {
-        if (count<150) {
+        if (count<120) {
             bg.tick(graphic);
-        }
-        else{
-            for (int i = 0; i < 30; i++) {
-                graphic.setPixel(ran.nextInt(graphic.getPixelWidth())
-                        , ran.nextInt(graphic.getPixelHeight())
-                        , PixelColor.fromValue(ran.nextInt(1, 3)));
-            }
-
         }
         if(cSquare.collides(cSquare1)){
             cSquare1.setPosition(cSquare1.getPosition().shiftY(-1));
@@ -62,10 +54,18 @@ public class Logo implements PixelDrawing {
         if(rad >= 2*Math.PI){
             rad -= 2*Math.PI;
         }
+        if(count>180){
+                for (int i = 0; i < 30; i++) {
+                    graphic.setPixel(ran.nextInt(graphic.getPixelWidth())
+                    , ran.nextInt(graphic.getPixelHeight())
+                    , PixelColor.fromValue(ran.nextInt(1, 3)));
+                }
+
+        }
         count++;
     }
 
     public boolean readyToEnd(){
-        return count>500;
+        return count>360;
     }
 }

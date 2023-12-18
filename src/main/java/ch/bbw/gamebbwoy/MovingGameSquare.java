@@ -55,8 +55,8 @@ public class MovingGameSquare implements PhysicsObject,GameObject, PixelDrawing 
             xSpeed = -unitX*speed;
             ySpeed = -unitY*speed;
         }
-        gravityPoint.x += xSpeed *referenceTime*deltaTime*2;
-        gravityPoint.y += ySpeed *referenceTime*deltaTime*2;
+        gravityPoint.x += xSpeed *referenceTime*deltaTime*1.6;
+        gravityPoint.y += ySpeed *referenceTime*deltaTime*1.6;
         if(Math.abs(unitY)<Math.abs(unitX)){
             double lesser = Math.min(linePoint.x,2*position.x - linePoint.x);
             double greater = Math.max(linePoint.x,2*position.x - linePoint.x);

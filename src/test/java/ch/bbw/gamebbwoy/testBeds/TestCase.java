@@ -62,8 +62,8 @@ public class TestCase {
     }
 
     public static List<GravityPoint> threePointsDifferentDeltaTest(){
-        point0.setTimePerDeltaTime(2);
-        point1.setTimePerDeltaTime(1);
+        point0.setTimePerDeltaTime(8);
+        point1.setTimePerDeltaTime(2);
         point2.setTimePerDeltaTime(4);
         points.add(point0);
         points.add(point1);

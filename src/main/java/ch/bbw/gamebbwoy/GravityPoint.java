@@ -56,9 +56,9 @@ public class GravityPoint extends Point implements PhysicsObject,GameObject{
         double deltaX = x-objPos.x;
         double deltaY = y-objPos.y;
         double distanceSquare = Math.pow(deltaX,2)+Math.pow(deltaY,2);
-        double gravStrength = 1.2;
+        double gravStrength = 1.25;
         if(signPositive()!=obj.signPositive()){
-            gravStrength = -1.2;
+            gravStrength = -1.25;
         }
         if(distanceSquare>=.1) {
             gravStrength *= Math.pow(obj.getTimePerDeltaTime()-timePerDeltaTime,2)/distanceSquare;

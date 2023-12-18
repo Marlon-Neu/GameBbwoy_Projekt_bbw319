@@ -32,9 +32,10 @@ public class Game implements PixelDrawing, ButtonListener {
         PixelDrawing.super.initialize(graphic);
         scoreDisplay = new NumberDisplay(new Point(graphic.getPixelWidth()-8,
                 graphic.getPixelHeight()-15),123,4);
-        forcesDisplay = new NumberDisplay(new Point(20,
-                5),123,1);
-        forcesIcon = new ForcesIcon(new Point(3,4));
+        forcesDisplay = new NumberDisplay(new Point(graphic.getPixelWidth()-8,
+                graphic.getPixelHeight()-29),123,1);
+        forcesIcon = new ForcesIcon(new Point(graphic.getPixelWidth()-24,
+                graphic.getPixelHeight()-30));
         drawingBoundary =  new Bounds(graphic.getPixelHeight(), graphic.getPixelWidth()-(scoreDisplay.getWidth()+8),0,scoreDisplay.getWidth()+8);
         gameBoundary = new Bounds(graphic.getPixelHeight()*2,
                 graphic.getPixelWidth()*2,
@@ -47,8 +48,8 @@ public class Game implements PixelDrawing, ButtonListener {
         heightTracker = new PlayerHeightTracker();
         world = new World(graphic, drawingBoundary,gameBoundary, player);
         world.add(heightTracker);
-        StaticGameSquare initialSquare = new StaticGameSquare(new Point(graphic.getPixelWidth()/2.0, playerPoint.y-50),
-                1,4,2);
+        StaticGameSquare initialSquare = new StaticGameSquare(new Point(playerPoint.x, playerPoint.y-55),
+                1,4,1);
         world.add(initialSquare);
     }
 
@@ -126,7 +127,7 @@ public class Game implements PixelDrawing, ButtonListener {
         point.x += randomNums.get(0)*2;
         point.y -= (world.getObjectNum()-2)*75 - randomNums.get(1)/4d;
         return new ForcesUp(point,0,
-                Math.abs(randomNums.get(2)/5)+1,
+                Math.abs(randomNums.get(2)/5)+2,
                 (randomNums.get(3)+2)/3);
     }
 

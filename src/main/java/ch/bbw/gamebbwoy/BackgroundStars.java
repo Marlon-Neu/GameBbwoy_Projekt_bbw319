@@ -30,8 +30,8 @@ public class BackgroundStars extends Point implements GameObject, PixelDrawing {
 
     @Override
     public void update(PlayerSquare player) {
-        x -= player.getCenterOfGravity().getXSpeed() * player.getTimePerDeltaTime()*parallax;
-        y -= player.getCenterOfGravity().getYSpeed() * player.getTimePerDeltaTime()*parallax;
+        x -= player.getCenterOfGravity().getXSpeed() * player.getTimePerDeltaTime()*parallax*.1;
+        y -= player.getCenterOfGravity().getYSpeed() * player.getTimePerDeltaTime()*parallax*.1;
     }
 
     @Override
