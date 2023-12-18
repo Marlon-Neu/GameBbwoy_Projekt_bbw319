@@ -24,6 +24,8 @@ public class Game implements PixelDrawing, ButtonListener {
     Point playerPoint;
     PlayerSquare player;
     PlayerHeightTracker heightTracker;
+    Logo logo;
+    boolean gameStart = false;
 
     @Override
     public void initialize(PixelDisplay graphic) {
@@ -39,12 +41,13 @@ public class Game implements PixelDrawing, ButtonListener {
                 -graphic.getPixelHeight()*10,
                 -graphic.getPixelWidth()*2);
         bg = new Background(drawingBoundary.left(), drawingBoundary.right());
+        logo = new Logo(bg);
         playerPoint = new Point(graphic.getPixelWidth()/2.0, graphic.getPixelHeight()*2.0/3);
         player = new PlayerSquare(playerPoint,0,5,drawingBoundary);
         heightTracker = new PlayerHeightTracker();
         world = new World(graphic, drawingBoundary,gameBoundary, player);
         world.add(heightTracker);
-        StaticGameSquare initialSquare = new StaticGameSquare(new Point(graphic.getPixelWidth()/2.0, playerPoint.y-30),
+        StaticGameSquare initialSquare = new StaticGameSquare(new Point(graphic.getPixelWidth()/2.0, playerPoint.y-50),
                 1,4,2);
         world.add(initialSquare);
     }
@@ -55,19 +58,25 @@ public class Game implements PixelDrawing, ButtonListener {
 
     @Override
     public void tick(PixelDisplay graphic) {
-        bg.tick(graphic);
-        if(world.getObjectNum()<minObjects){
-           world.add(generate());
+        if(!(logo.readyToEnd()&&gameStart))
+        {
+            logo.tick(graphic);
         }
-        if(world.getNumberOfBG() < 60){
-            world.add(generateBGStars());
+        else{
+            bg.tick(graphic);
+            if(world.getObjectNum()<minObjects){
+               world.add(generate());
+            }
+            if(world.getNumberOfBG() < 60){
+                world.add(generateBGStars());
+            }
+            world.update();
+            scoreDisplay.setNum((int)(heightTracker.getPlayerHeight()/10));
+            scoreDisplay.tick(graphic);
+            forcesDisplay.setNum(player.getNumberOfForces());
+            forcesDisplay.tick(graphic);
+            forcesIcon.tick(graphic);
         }
-        world.update();
-        scoreDisplay.setNum((int)(heightTracker.getPlayerHeight()/10));
-        scoreDisplay.tick(graphic);
-        forcesDisplay.setNum(player.getNumberOfForces());
-        forcesDisplay.tick(graphic);
-        forcesIcon.tick(graphic);
     }
 
     public GameObject generate(){
@@ -123,6 +132,7 @@ public class Game implements PixelDrawing, ButtonListener {
 
     @Override
     public void onButtonPress(GameButton button) {
+        gameStart = true;
         player.onButton(button,true);
     }
 
