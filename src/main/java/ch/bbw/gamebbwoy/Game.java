@@ -36,11 +36,11 @@ public class Game implements PixelDrawing, ButtonListener {
                 graphic.getPixelHeight()-29),123,1);
         forcesIcon = new ForcesIcon(new Point(graphic.getPixelWidth()-24,
                 graphic.getPixelHeight()-30));
-        drawingBoundary =  new Bounds(graphic.getPixelHeight(), graphic.getPixelWidth()-(scoreDisplay.getWidth()+8),0,scoreDisplay.getWidth()+8);
+        drawingBoundary =  new Bounds(graphic.getPixelHeight(), graphic.getPixelWidth()-(scoreDisplay.getWidth()+8),0,scoreDisplay.getWidth()+7);
         gameBoundary = new Bounds(graphic.getPixelHeight()*2,
-                graphic.getPixelWidth()*2,
+                graphic.getPixelWidth(),
                 -graphic.getPixelHeight()*10,
-                -graphic.getPixelWidth()*2);
+                -graphic.getPixelWidth());
         bg = new Background(drawingBoundary.left(), drawingBoundary.right());
         logo = new Logo(bg);
         playerPoint = new Point(graphic.getPixelWidth()/2.0, graphic.getPixelHeight()*2.0/3);
@@ -80,6 +80,15 @@ public class Game implements PixelDrawing, ButtonListener {
         }
     }
 
+    private double yOffset(){
+        if(player.getCenterOfGravity().getYSpeed()>=0){
+            return (world.getObjectNum()-2)*85;
+        }
+        else {
+            return (minObjects - world.getObjectNum()+1)*85;
+        }
+    }
+
     public GameObject generate(){
         IntStream stream = new Random().ints(10,-15,16);
         return switch (new Random().nextInt(3)) {
@@ -101,7 +110,7 @@ public class Game implements PixelDrawing, ButtonListener {
     private StaticGameSquare generateSGS(List<Integer> randomNums){
         Point point = new Point(playerPoint.x, playerPoint.y);
         point.x += randomNums.get(0)*2;
-        point.y -= (world.getObjectNum()-2)*85 - randomNums.get(1)/4d;
+        point.y -= yOffset() - randomNums.get(1)/4d;
         return new StaticGameSquare(point,0,
                 Math.abs(randomNums.get(2)/5)+3,
                 (randomNums.get(3)+2)/3);
@@ -110,7 +119,7 @@ public class Game implements PixelDrawing, ButtonListener {
     private MovingGameSquare generateMGS(List<Integer> randomNums){
         Point point = new Point(playerPoint.x, playerPoint.y);
         point.x += randomNums.get(0)*2;
-        point.y -= (world.getObjectNum()-2)*85 - randomNums.get(1)/4d;
+        point.y -= yOffset() - randomNums.get(1)/4d;
         Point linePoint = new Point(point.x, point.y);
         linePoint.x += randomNums.get(2)*2;
         linePoint.y -= world.getObjectNum() - randomNums.get(3)*2;
@@ -125,7 +134,7 @@ public class Game implements PixelDrawing, ButtonListener {
     private ForcesUp generateFUS(List<Integer> randomNums){
         Point point = new Point(playerPoint.x, playerPoint.y);
         point.x += randomNums.get(0)*2;
-        point.y -= (world.getObjectNum()-2)*75 - randomNums.get(1)/4d;
+        point.y -= yOffset() - randomNums.get(1)/3d;
         return new ForcesUp(point,0,
                 Math.abs(randomNums.get(2)/5)+2,
                 (randomNums.get(3)+2)/3);
