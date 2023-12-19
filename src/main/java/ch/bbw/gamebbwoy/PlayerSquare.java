@@ -106,9 +106,6 @@ public class PlayerSquare extends CollidingSquare implements PhysicsObject,GameO
 
         super.setAngleInRadians(angleInRadians);
         indicator.setAngleInRadians(angleInRadians);
-        System.out.println(getTimePerDeltaTime());
-        System.out.println(centerOfGravity.getXSpeed());
-        System.out.println(centerOfGravity.getYSpeed());
     }
     private void pull(boolean isDown){
         if(isDown&&numberOfForces>0&&pullSpeed<0.2){
