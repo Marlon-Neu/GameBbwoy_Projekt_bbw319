@@ -71,7 +71,7 @@ public class StaticGameSquare extends CollidingSquare implements PhysicsObject,G
     @Override
     public double getTimePerDeltaTime() {
         double minTurnSpeed = maxTurnSpeed / 10;
-        return maxTurnSpeed/Math.min(Math.abs(turnSpeed),minTurnSpeed);
+        return maxTurnSpeed/Math.max(maxTurnSpeed-Math.abs(turnSpeed),minTurnSpeed);
     }
 
     @Override
